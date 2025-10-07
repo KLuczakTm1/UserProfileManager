@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interaktywny System Rejestracji Wydarzeń</title>
+    <link rel="stylesheet" href="UserProfileManagerStyles.css">
+</head>
+<body>
+    <div class="container">
+
+        <!-- Strona główna -->
+        <div id="homePage">
+            <h1>Witaj w Interaktywnym Systemie Rejestracji Wydarzeń</h1>
+            <div class="home-buttons">
+                <button id="registerBtn">Zarejestruj się</button>
+                <button id="loginBtn">Zaloguj się</button>
+                <button id="goToProfileBtn" style="display: none;">Twój profil</button>
+            </div>
+            <div id="eventList" class="event-grid"></div>
+        </div>
+
+        <!-- Formularz rejestracji -->
+        <div id="registerPage" class="form-container">
+            <h2>Rejestracja</h2>
+            <form id="registrationForm">
+                <label for="regFirstName">Imię:</label>
+                <input type="text" id="regFirstName" required>
+
+                <label for="regLastName">Nazwisko:</label>
+                <input type="text" id="regLastName" required>
+
+                <label for="regEmail">Email:</label>
+                <input type="email" id="regEmail" required>
+
+                <label for="regPassword">Hasło:</label>
+                <input type="password" id="regPassword" required>
+
+                <label for="regConfirmPassword">Powtórz hasło:</label>
+                <input type="password" id="regConfirmPassword" required>
+
+                <button type="submit">Zarejestruj się</button>
+                <p id="registerError" class="error-message"></p>
+            </form>
+            <button id="homeBtn">Powrót</button>
+        </div>
+
+        <!-- Formularz logowania -->
+        <div id="loginPage" class="form-container">
+            <h2>Logowanie</h2>
+            <form id="loginForm">
+                <label for="loginEmail">Email:</label>
+                <input type="email" id="loginEmail" required>
+
+                <label for="loginPassword">Hasło:</label>
+                <input type="password" id="loginPassword" required>
+
+                <button type="submit">Zaloguj się</button>
+                <p id="loginError" class="error-message"></p>
+            </form>
+            <button id="homeBtn2">Powrót</button>
+        </div>
+
+        <!-- Strona kursów (z miejscami uczestników) -->
+        <div id="coursesPage" class="profile-container">
+            <h2>Lista Kursów i Uczestników</h2>
+            <div id="courseList"></div>
+            <button id="backToHomeBtn">Powrót</button>
+        </div>
+
+        <!-- Profil użytkownika -->
+        <div id="profilePage" class="profile-container">
+            <h2>Twój Profil</h2>
+
+            <div id="userInfo">
+                <p><strong>Email:</strong> <span id="userEmail"></span></p>
+                <p><strong>Imię:</strong> <span id="userFirstName"></span></p>
+                <p><strong>Nazwisko:</strong> <span id="userLastName"></span></p>
+                <button id="editProfileBtn">Edytuj Profil</button>
+            </div>
+
+            <div id="editProfileForm" class="edit-form-container" style="display: none;">
+                <div class="form-group">
+                    <label for="editFirstName">Imię:</label>
+                    <input type="text" id="editFirstName">
+                </div>
+                <div class="form-group">
+                    <label for="editLastName">Nazwisko:</label>
+                    <input type="text" id="editLastName">
+                </div>
+                <div class="form-group">
+                    <label for="editEmail">E-mail:</label>
+                    <input type="email" id="editEmail">
+                </div>
+                <div class="form-group">
+                    <label for="editPassword">Hasło:</label>
+                    <input type="password" id="editPassword">
+                </div>
+
+                <div class="edit-buttons">
+                    <button id="saveProfileBtn">Zapisz zmiany</button>
+                    <button id="cancelEditBtn" class="cancel">Anuluj</button>
+                </div>
+            </div>
+
+            <h3>Wydarzenia, na które się zapisałeś:</h3>
+            <ul id="userEventsList"></ul>
+
+            <button id="logoutBtn">Wyloguj się</button>
+        </div>
+
+    </div>
+
+    <script src="UserProfileManagerScript.js"></script>
+</body>
+</html>
