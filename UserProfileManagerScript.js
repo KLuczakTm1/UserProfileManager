@@ -1,4 +1,4 @@
-// Przyk³adowe dane wydarzeñ
+// PrzykÅ‚adowe dane wydarzeÅ„
 const eventsData = [
     { id: 1, name: "Warsztaty programowania", date: "2025-10-20", description: "Nauka podstaw JS" },
     { id: 2, name: "Hackathon AI", date: "2025-11-05", description: "Projekty z AI" },
@@ -10,13 +10,28 @@ let users = JSON.parse(localStorage.getItem("users")) || [];
 let eventSeats = JSON.parse(localStorage.getItem("eventSeats")) || {}; // { eventId: [emails] }
 
 document.addEventListener("DOMContentLoaded", () => {
-    if (currentUser) {
-        document.getElementById("goToProfileBtn").style.display = "inline-block";
-    }
+    updateHomeButtons();
     loadHomePage();
 });
 
-// === Funkcje prze³¹czania stron ===
+// ====== Aktualizacja widocznoÅ›ci przyciskÃ³w ======
+function updateHomeButtons() {
+    const registerBtn = document.getElementById("registerBtn");
+    const loginBtn = document.getElementById("loginBtn");
+    const profileBtn = document.getElementById("goToProfileBtn");
+
+    if (currentUser) {
+        registerBtn.style.display = "none";
+        loginBtn.style.display = "none";
+        profileBtn.style.display = "inline-block";
+    } else {
+        registerBtn.style.display = "inline-block";
+        loginBtn.style.display = "inline-block";
+        profileBtn.style.display = "none";
+    }
+}
+
+// === PrzeÅ‚Ä…czanie stron ===
 function showPage(id) {
     ["homePage", "registerPage", "loginPage", "profilePage", "coursesPage"].forEach(page => {
         document.getElementById(page).style.display = page === id ? "block" : "none";
@@ -25,6 +40,8 @@ function showPage(id) {
 
 function loadHomePage() {
     showPage("homePage");
+    updateHomeButtons();
+
     const eventList = document.getElementById("eventList");
     eventList.innerHTML = "";
 
@@ -35,7 +52,7 @@ function loadHomePage() {
             <h3>${event.name}</h3>
             <p>${event.date}</p>
             <p>${event.description}</p>
-            <button onclick="showCoursesPage(${event.id})">Zobacz uczestników</button>
+            <button onclick="showCoursesPage(${event.id})">Zobacz uczestnikÃ³w</button>
         `;
         eventList.appendChild(card);
     });
@@ -54,12 +71,12 @@ document.getElementById("registrationForm").onsubmit = e => {
     const confirmPassword = regConfirmPassword.value;
 
     if (password !== confirmPassword) {
-        registerError.textContent = "Has³a musz¹ byæ identyczne!";
+        registerError.textContent = "HasÅ‚a muszÄ… byÄ‡ identyczne!";
         return;
     }
 
     if (users.find(u => u.email === email)) {
-        registerError.textContent = "Ten e-mail ju¿ istnieje!";
+        registerError.textContent = "Ten e-mail juÅ¼ istnieje!";
         return;
     }
 
@@ -67,10 +84,9 @@ document.getElementById("registrationForm").onsubmit = e => {
     users.push(user);
     localStorage.setItem("users", JSON.stringify(users));
 
-    alert("Rejestracja zakoñczona!");
+    alert("Rejestracja zakoÅ„czona!");
     currentUser = user;
     localStorage.setItem("currentUser", JSON.stringify(user));
-    document.getElementById("goToProfileBtn").style.display = "inline-block";
     loadHomePage();
 };
 
@@ -85,18 +101,17 @@ document.getElementById("loginForm").onsubmit = e => {
 
     const user = users.find(u => u.email === email && u.password === password);
     if (!user) {
-        loginError.textContent = "Nieprawid³owy e-mail lub has³o!";
+        loginError.textContent = "NieprawidÅ‚owy e-mail lub hasÅ‚o!";
         return;
     }
 
     currentUser = user;
     localStorage.setItem("currentUser", JSON.stringify(user));
     alert("Zalogowano!");
-    document.getElementById("goToProfileBtn").style.display = "inline-block";
     loadHomePage();
 };
 
-// === Profil u¿ytkownika ===
+// === Profil uÅ¼ytkownika ===
 document.getElementById("goToProfileBtn").onclick = loadProfilePage;
 
 function loadProfilePage() {
@@ -110,20 +125,30 @@ function loadProfilePage() {
     const list = document.getElementById("userEventsList");
     list.innerHTML = "";
 
+    let userHasCourses = false;
+
     for (const [eventId, emails] of Object.entries(eventSeats)) {
         if (emails.includes(currentUser.email)) {
             const event = eventsData.find(e => e.id == eventId);
             const li = document.createElement("li");
             li.textContent = `${event.name} (${event.date})`;
             list.appendChild(li);
+            userHasCourses = true;
         }
+    }
+
+    if (!userHasCourses) {
+        const msg = document.createElement("p");
+        msg.classList.add("no-courses");
+        msg.textContent = "Brak kursÃ³w.";
+        list.appendChild(msg);
     }
 }
 
 document.getElementById("logoutBtn").onclick = () => {
     currentUser = null;
     localStorage.removeItem("currentUser");
-    document.getElementById("goToProfileBtn").style.display = "none";
+    updateHomeButtons();
     loadHomePage();
 };
 
@@ -164,56 +189,57 @@ function showCoursesPage(selectedId) {
     const container = document.getElementById("courseList");
     container.innerHTML = "";
 
-    eventsData.forEach(event => {
-        const eventDiv = document.createElement("div");
-        eventDiv.classList.add("course-container");
+    const event = eventsData.find(e => e.id === selectedId);
+    if (!event) return;
 
-        const title = document.createElement("div");
-        title.classList.add("course-title");
-        title.textContent = `${event.name} (${event.date})`;
-        eventDiv.appendChild(title);
+    const eventDiv = document.createElement("div");
+    eventDiv.classList.add("course-container");
 
-        const seatsDiv = document.createElement("div");
-        seatsDiv.classList.add("seats");
+    const title = document.createElement("div");
+    title.classList.add("course-title");
+    title.textContent = `${event.name} (${event.date})`;
+    eventDiv.appendChild(title);
 
-        const seats = eventSeats[event.id] || [];
-        for (let i = 0; i < 5; i++) {
-            const seat = document.createElement("div");
-            seat.classList.add("seat");
+    const seatsDiv = document.createElement("div");
+    seatsDiv.classList.add("seats");
 
-            if (seats[i]) {
-                seat.textContent = seats[i];
-                seat.classList.add("taken");
-            } else {
-                seat.textContent = "Wolne";
-                seat.classList.add("free");
-                seat.onclick = () => registerForSeat(event.id, i);
-            }
-            seatsDiv.appendChild(seat);
+    const seats = eventSeats[event.id] || [];
+    for (let i = 0; i < 5; i++) {
+        const seat = document.createElement("div");
+        seat.classList.add("seat");
+
+        if (seats[i]) {
+            seat.textContent = seats[i];
+            seat.classList.add("taken");
+        } else {
+            seat.textContent = "Wolne";
+            seat.classList.add("free");
+            seat.onclick = () => registerForSeat(event.id, i);
         }
+        seatsDiv.appendChild(seat);
+    }
 
-        const leaveBtn = document.createElement("button");
-        leaveBtn.textContent = "Wypisz siê";
-        leaveBtn.onclick = () => leaveEvent(event.id);
+    const leaveBtn = document.createElement("button");
+    leaveBtn.textContent = "Wypisz siÄ™";
+    leaveBtn.onclick = () => leaveEvent(event.id);
 
-        eventDiv.appendChild(seatsDiv);
-        eventDiv.appendChild(leaveBtn);
-        container.appendChild(eventDiv);
-    });
+    eventDiv.appendChild(seatsDiv);
+    eventDiv.appendChild(leaveBtn);
+    container.appendChild(eventDiv);
 }
 
 function registerForSeat(eventId, seatIndex) {
-    if (!currentUser) return alert("Zaloguj siê najpierw!");
+    if (!currentUser) return alert("Zaloguj siÄ™ najpierw!");
     const seats = eventSeats[eventId] || [];
 
     if (seats.includes(currentUser.email))
-        return alert("Ju¿ jesteœ zapisany na ten kurs!");
+        return alert("JuÅ¼ jesteÅ› zapisany na ten kurs!");
 
     seats[seatIndex] = currentUser.email;
     eventSeats[eventId] = seats;
     localStorage.setItem("eventSeats", JSON.stringify(eventSeats));
 
-    showCoursesPage();
+    showCoursesPage(eventId);
 }
 
 function leaveEvent(eventId) {
@@ -223,7 +249,11 @@ function leaveEvent(eventId) {
     eventSeats[eventId] = newSeats;
     localStorage.setItem("eventSeats", JSON.stringify(eventSeats));
 
-    showCoursesPage();
+    showCoursesPage(eventId);
 }
 
 document.getElementById("backToHomeBtn").onclick = () => loadHomePage();
+
+document.getElementById("backFromProfileBtn").onclick = () => {
+    loadHomePage();
+};
