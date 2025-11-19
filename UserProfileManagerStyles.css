@@ -245,3 +245,11 @@ input[type="password"] {
 #backFromProfileBtn:hover {
     background-color: #5a6268;
 }
+
+.userInfo{
+    width: 50%;
+    float: left;
+}
+.logoutBtn{
+    margin-bottom: 0px;
+}
