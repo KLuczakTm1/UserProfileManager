@@ -70,10 +70,10 @@
 
         <!-- Profil użytkownika -->
         <div id="profilePage" class="profile-container">
-            <h2>Twój Profil</h2>
 
-            <button id="backFromProfileBtn">Wróć</button>
-            <div id="userInfo">
+            
+            <div id="userInfo" class="userInfo">
+                <h2>Twój Profil</h2>
                 <p><strong>Email:</strong> <span id="userEmail"></span></p>
                 <p><strong>Imię:</strong> <span id="userFirstName"></span></p>
                 <p><strong>Nazwisko:</strong> <span id="userLastName"></span></p>
@@ -104,11 +104,14 @@
                 </div>
             </div>
 
-            <h3>Wydarzenia, na które się zapisałeś:</h3>
+            <h2>Wydarzenia, na które się zapisałeś:</h2>
             <ul id="userEventsList"></ul>
-
-            <button id="logoutBtn">Wyloguj się</button>
+            <br>
+            <br>
+            <button id="logoutBtn" class="logoutBtn">Wyloguj się</button>
+            <button id="backFromProfileBtn" class="backFromProfileBtn">Wróć</button> 
         </div>
+        
 
     </div>
 
